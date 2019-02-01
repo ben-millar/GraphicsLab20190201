@@ -19,7 +19,6 @@ Game::Game() :
 {
 	setupFontAndText(); // load font 
 	setupObjects(); // set sfml object parameters
-	setupSprites(); // load and setup textures
 	setupSounds(); // load and setup sound buffers
 }
 
@@ -91,19 +90,19 @@ void Game::setupFontAndText()
 	{
 		std::cout << "problem loading arial black font" << std::endl;
 	}
+	m_scoreText.setFont(m_ArialBlackfont);
+	m_gameOverText.setFont(m_ArialBlackfont);
+
+	m_gameOverText.setFillColor(sf::Color::White);
+	m_gameOverText.setCharacterSize(34U);
+	m_gameOverText.setPosition(400.0f,300.0f);
+	m_gameOverText.setString("GAME OVER");
 }
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 void Game::setupSounds()
 {
 	
-}
-
-// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-void Game::setupSprites()
-{
-
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -129,20 +128,55 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
+	if (gameState == gameplay)
+	{
+		obstacleHandler();
+		move();
+	}
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+void Game::obstacleHandler()
+{
 	if (obstacleClock.getElapsedTime() > obstacleTimer + sf::seconds(rand() % 4 - 1.5))
 	{
 		obstacleClock.restart();
 		m_obstacle[obstacleStep%NUM_OF_OBSTACLES].spawn();
 		obstacleStep++;
 	}
+}
 
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+void Game::move()
+{
 	m_ball.move();
 
 	for (int i = 0; i < NUM_OF_OBSTACLES; i++)
 	{
 		if (m_obstacle[i].isOnScreen() == true) m_obstacle[i].move();
 	}
+
+	checkCollisions();
 }
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+void Game::checkCollisions()
+{
+	for (int i = 0; i < NUM_OF_OBSTACLES; i++)
+	{
+		sf::RectangleShape obstacle = m_obstacle[i].getBody();
+		sf::RectangleShape player = m_ball.getBody();
+
+		if (obstacle.getGlobalBounds().intersects(player.getGlobalBounds()))
+		{
+			gameState = gameOver;
+		}
+	}
+}
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /// <summary>
@@ -152,11 +186,20 @@ void Game::render()
 {
 	m_window.clear(sf::Color::Black);
 
-	m_window.draw(m_ball.getBody());
-
-	for (int i = 0; i < NUM_OF_OBSTACLES; i++)
+	if (gameState == gameplay)
 	{
-		if (m_obstacle[i].isOnScreen() == true) m_window.draw(m_obstacle[i].getBody());
+
+		m_window.draw(m_ball.getBody());
+
+		for (int i = 0; i < NUM_OF_OBSTACLES; i++)
+		{
+			if (m_obstacle[i].isOnScreen() == true) m_window.draw(m_obstacle[i].getBody());
+		}
+
+	}
+	else if (gameState == gameOver)
+	{
+		m_window.draw(m_gameOverText);
 	}
 
 	m_window.display();

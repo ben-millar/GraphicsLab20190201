@@ -30,8 +30,10 @@ private:
 	void setupFontAndText(); // set up all text
 	void setupSounds(); // set up all sounds
 	void setupObjects(); // set up all sfml objects
-	void setupSprites(); // set up all images
 	void update(sf::Time t_deltaTime); // main update method
+	void obstacleHandler();
+	void move();
+	void checkCollisions(); // check collisions between player and obstacles
 	void render(); // renders framebuffer
 
 	// +++++++++++++++++++++++++++++
@@ -44,6 +46,17 @@ private:
 
 	int obstacleStep = 0;
 
+	enum state
+	{
+		gameplay,
+		pause,
+		gameOver
+	};
+
+	state gameState = gameplay;
+
+	float m_score;
+
 	// +++++++++++++++++++++++++++++
 
 	// ++++++++++ Objects ++++++++++
@@ -53,6 +66,9 @@ private:
 
 	sf::Clock obstacleClock;
 	sf::Time obstacleTimer;
+
+	sf::Text m_scoreText;
+	sf::Text m_gameOverText;
 
 	Ball m_ball;
 	Obstacles m_obstacle[NUM_OF_OBSTACLES];
