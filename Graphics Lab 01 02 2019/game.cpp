@@ -129,7 +129,7 @@ void Game::update(sf::Time t_deltaTime)
 		m_window.close();
 	}
 
-	if (obstacleClock.getElapsedTime() > obstacleTimer + sf::seconds(rand() % 4 - 1-5))
+	if (obstacleClock.getElapsedTime() > obstacleTimer + sf::seconds(rand() % 4 - 1.5))
 	{
 		obstacleClock.restart();
 		m_obstacle[obstacleStep%NUM_OF_OBSTACLES].spawn();
