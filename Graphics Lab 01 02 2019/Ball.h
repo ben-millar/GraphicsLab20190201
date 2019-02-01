@@ -4,6 +4,8 @@ class Ball
 {
 	sf::RectangleShape body;
 
+	int score;
+
 	sf::Vector2f velocity;
 	float moveSpeed;
 
@@ -22,6 +24,7 @@ public:
 	~Ball();
 
 	inline sf::RectangleShape getBody() { return body; }
+	inline int getScore() { return score; }
 
 	void start();
 	void move();

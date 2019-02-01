@@ -13,6 +13,8 @@ Ball::Ball()
 
 	moveState = top;
 	moving = false;
+
+	score = 0;
 }
 
 
@@ -45,5 +47,6 @@ void Ball::stop()
 {
 	velocity = { 0.0f,0.0f };
 	(moveState == top) ? moveState = bottom : moveState = top;
+	score++;
 	moving = false;
 }

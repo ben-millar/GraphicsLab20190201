@@ -4,7 +4,7 @@
 Obstacles::Obstacles()
 {
 	body.setPosition({ -100.0f,-100.0f });
-	float size = static_cast<float>(rand() % 41 + 30); // random between 30 - 60
+	float size = static_cast<float>(rand() % 41 + 30); // random between 30 - 70
 	body.setSize({ size,size });
 
 	moveSpeed = static_cast<float>(rand() % 4 + 2); // random between 2 - 5

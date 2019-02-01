@@ -14,7 +14,7 @@
 /// pass parameters for sfml window, setup m_exitGame
 /// </summary>
 Game::Game() :
-	m_window{ sf::VideoMode{ 1000, 600, 32 }, "SFML Game" },
+	m_window{ sf::VideoMode{ 1000, 600, 32 }, "Rectangle Dodge" },
 	m_exitGame{ false } //when true game will exit
 {
 	setupFontAndText(); // load font 
@@ -92,11 +92,20 @@ void Game::setupFontAndText()
 	}
 	m_scoreText.setFont(m_ArialBlackfont);
 	m_gameOverText.setFont(m_ArialBlackfont);
+	m_gameOverScoreText.setFont(m_ArialBlackfont);
+
+	m_scoreText.setFillColor(sf::Color(255, 255, 255, 192));
+	m_scoreText.setCharacterSize(150U);
+	m_scoreText.setPosition(450.0f, 230.0f);
 
 	m_gameOverText.setFillColor(sf::Color::White);
-	m_gameOverText.setCharacterSize(34U);
-	m_gameOverText.setPosition(400.0f,300.0f);
+	m_gameOverText.setCharacterSize(64U);
+	m_gameOverText.setPosition(300.0f,200.0f);
 	m_gameOverText.setString("GAME OVER");
+
+	m_gameOverScoreText.setFillColor(sf::Color::White);
+	m_gameOverScoreText.setCharacterSize(32U);
+	m_gameOverScoreText.setPosition(335.0f, 270.0f);
 }
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -114,6 +123,7 @@ void Game::setupObjects()
 {
 	obstacleClock.restart();
 	obstacleTimer = sf::seconds(3.0f);
+
 }
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -188,6 +198,8 @@ void Game::render()
 
 	if (gameState == gameplay)
 	{
+		m_scoreText.setString(std::to_string(m_ball.getScore()));
+		m_window.draw(m_scoreText);
 
 		m_window.draw(m_ball.getBody());
 
@@ -199,7 +211,10 @@ void Game::render()
 	}
 	else if (gameState == gameOver)
 	{
+		m_gameOverScoreText.setString("You scored " + std::to_string(m_ball.getScore()) + " points");
+
 		m_window.draw(m_gameOverText);
+		m_window.draw(m_gameOverScoreText);
 	}
 
 	m_window.display();

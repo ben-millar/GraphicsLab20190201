@@ -55,8 +55,6 @@ private:
 
 	state gameState = gameplay;
 
-	float m_score;
-
 	// +++++++++++++++++++++++++++++
 
 	// ++++++++++ Objects ++++++++++
@@ -69,6 +67,7 @@ private:
 
 	sf::Text m_scoreText;
 	sf::Text m_gameOverText;
+	sf::Text m_gameOverScoreText;
 
 	Ball m_ball;
 	Obstacles m_obstacle[NUM_OF_OBSTACLES];
