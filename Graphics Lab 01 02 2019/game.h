@@ -1,9 +1,3 @@
-/// <summary>
-/// Author: Ben Millar – C00236772
-/// Date:
-/// Estimated time to complete: 2 hours
-/// Session 1 Start: 09:30 End:
-/// </summary>
 
 #pragma once
 #ifndef GAME
@@ -35,6 +29,7 @@ private:
 	void move();
 	void checkCollisions(); // check collisions between player and obstacles
 	void render(); // renders framebuffer
+	void reset();
 
 	// +++++++++++++++++++++++++++++
 
@@ -60,6 +55,7 @@ private:
 	// ++++++++++ Objects ++++++++++
 
 	sf::RenderWindow m_window; // main SFML window
+
 	sf::Font m_ArialBlackfont;
 
 	sf::Clock obstacleClock;

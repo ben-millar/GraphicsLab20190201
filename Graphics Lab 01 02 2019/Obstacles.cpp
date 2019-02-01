@@ -9,9 +9,10 @@ Obstacles::Obstacles()
 
 	moveSpeed = static_cast<float>(rand() % 4 + 2); // random between 2 - 5
 
+	timeToLive = 600;
+
 	onScreen = false;
 }
-
 
 Obstacles::~Obstacles()
 {
@@ -37,5 +38,13 @@ void Obstacles::spawn()
 	
 	body.setPosition(xPos, yPos);
 
+	timeToLive = 600;
 	onScreen = true;
+}
+
+void Obstacles::move()
+{
+	body.move(velocity);
+	timeToLive--;
+	if (timeToLive <= 0) onScreen = false;
 }

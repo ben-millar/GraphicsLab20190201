@@ -1,9 +1,3 @@
-/// <summary>
-/// Author: Ben Millar – C00236772
-/// Date:
-/// Estimated time to complete:
-/// Session 1 Start: End:
-/// </summary>
 
 #include "game.h"
 #include <iostream>
@@ -77,6 +71,14 @@ void Game::processEvents()
 			{
 				m_ball.start();
 			}
+
+			if (gameState == gameOver)
+			{
+				if (sf::Keyboard::R == event.key.code)
+				{
+					reset();
+				}
+			}
 		}
 	}
 }
@@ -94,15 +96,18 @@ void Game::setupFontAndText()
 	m_gameOverText.setFont(m_ArialBlackfont);
 	m_gameOverScoreText.setFont(m_ArialBlackfont);
 
+	// setup score text
 	m_scoreText.setFillColor(sf::Color(255, 255, 255, 192));
 	m_scoreText.setCharacterSize(150U);
 	m_scoreText.setPosition(450.0f, 230.0f);
 
+	// setup game over text
 	m_gameOverText.setFillColor(sf::Color::White);
 	m_gameOverText.setCharacterSize(64U);
 	m_gameOverText.setPosition(300.0f,200.0f);
 	m_gameOverText.setString("GAME OVER");
 
+	// set up game over score text
 	m_gameOverScoreText.setFillColor(sf::Color::White);
 	m_gameOverScoreText.setCharacterSize(32U);
 	m_gameOverScoreText.setPosition(335.0f, 270.0f);
@@ -121,9 +126,8 @@ void Game::setupSounds()
 ///</summary>
 void Game::setupObjects()
 {
-	obstacleClock.restart();
-	obstacleTimer = sf::seconds(3.0f);
-
+	obstacleClock.restart(); // clock for keeping track of obstacle spawn
+	obstacleTimer = sf::seconds(3.0f); // timer for spawning obstacles
 }
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -149,11 +153,11 @@ void Game::update(sf::Time t_deltaTime)
 
 void Game::obstacleHandler()
 {
-	if (obstacleClock.getElapsedTime() > obstacleTimer + sf::seconds(rand() % 4 - 1.5))
+	if (obstacleClock.getElapsedTime() > obstacleTimer + sf::seconds(rand() % 4 - 1.5)) // timer +- 1.5 seconds
 	{
 		obstacleClock.restart();
-		m_obstacle[obstacleStep%NUM_OF_OBSTACLES].spawn();
-		obstacleStep++;
+		m_obstacle[obstacleStep%NUM_OF_OBSTACLES].spawn(); // circular array access, runs 0 to 9 and resets to 0
+		obstacleStep++; // step counter for circular access
 	}
 }
 
@@ -177,12 +181,15 @@ void Game::checkCollisions()
 {
 	for (int i = 0; i < NUM_OF_OBSTACLES; i++)
 	{
-		sf::RectangleShape obstacle = m_obstacle[i].getBody();
-		sf::RectangleShape player = m_ball.getBody();
-
-		if (obstacle.getGlobalBounds().intersects(player.getGlobalBounds()))
+		if (m_obstacle[i].isOnScreen() == true)
 		{
-			gameState = gameOver;
+			sf::RectangleShape obstacle = m_obstacle[i].getBody();
+			sf::RectangleShape player = m_ball.getBody();
+
+			if (obstacle.getGlobalBounds().intersects(player.getGlobalBounds()))
+			{
+				gameState = gameOver;
+			}
 		}
 	}
 }
@@ -211,7 +218,7 @@ void Game::render()
 	}
 	else if (gameState == gameOver)
 	{
-		m_gameOverScoreText.setString("You scored " + std::to_string(m_ball.getScore()) + " points");
+		m_gameOverScoreText.setString("You scored " + std::to_string(m_ball.getScore()) + " points" + "\n\n\t  [R] to restart");
 
 		m_window.draw(m_gameOverText);
 		m_window.draw(m_gameOverScoreText);
@@ -219,4 +226,18 @@ void Game::render()
 
 	m_window.display();
 }
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+void Game::reset()
+{
+	for (int i = 0; i < NUM_OF_OBSTACLES; i++)
+	{
+		m_obstacle[i].reset();
+	}
+
+	m_ball.reset();
+	gameState = gameplay;
+}
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

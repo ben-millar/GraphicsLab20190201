@@ -29,5 +29,6 @@ public:
 	void start();
 	void move();
 	void stop();
-};
 
+	void reset();
+};

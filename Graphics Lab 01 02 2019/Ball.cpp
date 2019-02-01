@@ -17,7 +17,6 @@ Ball::Ball()
 	score = 0;
 }
 
-
 Ball::~Ball()
 {
 }
@@ -36,7 +35,7 @@ void Ball::move()
 	if (moving == true)
 	{
 		body.move({ velocity });
-		if (body.getPosition().y < 25.0f || body.getPosition().y > 575.0f)
+		if (body.getPosition().y < 25.0f || body.getPosition().y > 575.0f) // if hits the top or bottom
 		{
 			stop();
 		}
@@ -46,7 +45,16 @@ void Ball::move()
 void Ball::stop()
 {
 	velocity = { 0.0f,0.0f };
-	(moveState == top) ? moveState = bottom : moveState = top;
+	(moveState == top) ? moveState = bottom : moveState = top; // swaps movestate. If top, bottom. If bottom, top.
 	score++;
 	moving = false;
+}
+
+void Ball::reset()
+{
+	body.setPosition({ 500.0f,0.0f + 20.0f });
+	velocity = { 0.0f,0.0f };
+	moveState = top;
+	moving = false;
+	score = 0;
 }

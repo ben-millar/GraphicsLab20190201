@@ -5,9 +5,6 @@ class Obstacles
 {
 	sf::RectangleShape body;
 
-	sf::Vector2f velocity;
-	float moveSpeed;
-
 	enum direction
 	{
 		left,
@@ -16,6 +13,11 @@ class Obstacles
 
 	direction moveDirection;
 
+	sf::Vector2f velocity;
+	float moveSpeed;
+
+	int timeToLive;
+
 	bool onScreen;
 
 public:
@@ -23,7 +25,9 @@ public:
 	~Obstacles();
 
 	void spawn();
-	inline void move() { body.move(velocity); }
+	void move();
+
+	inline void reset() { onScreen = false; }
 
 	inline bool isOnScreen() { return onScreen; }
 	inline sf::RectangleShape getBody() { return body; }
